@@ -8,6 +8,7 @@ use Kanboard\Core\ExternalTask\NotFoundException;
 
 class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
 {
+    private $session_token;
     /**
      * Get provider name (visible in the user interface)
      *
@@ -52,7 +53,16 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
      */
     public function fetch($uri, $projectID)
     {
+        $this->$session_token = $this->getGlpiSession();
         $ticket = $this->getGlpiTicket($uri);
+
+        if (! empty($ticket)){
+            $ticket['actor'] = $this->getGlpiTicketActor($uri);
+        }
+        #echo '<pre>';
+        #var_dump($ticket);
+        #echo '</pre>';
+        $this->killGlpiSession();
         return new GlpiTask($uri, $ticket);
     }
 
@@ -134,6 +144,17 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
         return $token['session_token'];
     }
 
+    protected function killGlpiSession()
+    {
+        $headers = array(
+            'session-token: ' . $this->$session_token
+        );
+
+        $url = $this->configModel->get('glpi_url') . '/apirest.php/killSession/';
+        $token = $this->httpClient->getJson($url, $headers);
+        return true;
+    }
+
     protected function getAuthorizationHeaders(){
         $user_token = $this->configModel->get('glpi_user_token');
 
@@ -147,7 +168,7 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
     protected function getGlpiTicket($uri)
     {
         $headers = array(
-            'session-token: ' . $this->getGlpiSession() //npdft94t1i2d1iuijbusuuf87g
+            'session-token: ' . $this->$session_token
         );
 
         $matches = array();
@@ -155,7 +176,22 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
             $id = $matches[1];
         }
 
-        $ticket_path = '/apirest.php/Ticket/' . $id;
+        $ticket_path = '/apirest.php/Ticket/' . $id . '?expand_dropdowns=true&get_hateoas=false';
+        return $this->httpClient->getJson($this->getBaseUrl() . $ticket_path, $headers);
+    }
+
+    protected function getGlpiTicketActor($uri)
+    {
+        $matches = array();
+        if (preg_match('/id=(\d+)$/', $uri, $matches)) {
+            $id = $matches[1];
+        }
+
+        $headers = array(
+            'session-token: ' . $this->$session_token
+        );
+
+        $ticket_path = '/apirest.php/Ticket/' . $id . '/Ticket_User' . '?expand_dropdowns=true&get_hateoas=false';
         return $this->httpClient->getJson($this->getBaseUrl() . $ticket_path, $headers);
     }
 }
