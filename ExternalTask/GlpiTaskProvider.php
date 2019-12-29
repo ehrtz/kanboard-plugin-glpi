@@ -54,7 +54,16 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
     public function fetch($uri, $projectID)
     {
         $this->$session_token = $this->getGlpiSession();
+
+        if ($this->$session_token == ''){
+            throw new NotFoundException("Coudn't fetch GLPI ticket data! Authentication Error!");
+        }
+
         $ticket = $this->getGlpiTicket($uri);
+
+        if (isset($ticket) && empty($ticket['id'])) {
+            throw new NotFoundException($ticket[1]);
+        }
 
         if (! empty($ticket)){
             $ticket['actor'] = $this->getGlpiTicketActor($uri);
@@ -141,7 +150,12 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
     {
         $url = $this->configModel->get('glpi_url') . '/apirest.php/initSession/';
         $token = $this->httpClient->getJson($url, $this->getAuthorizationHeaders());
-        return $token['session_token'];
+
+        if (isset($token['session_token'])){
+            return $token['session_token'];
+        }
+
+        return '';
     }
 
     protected function killGlpiSession()
