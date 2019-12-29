@@ -19,7 +19,7 @@
 
                 <tr>
                     <th width="13%"><?= t('Last update') ?></th>
-                    <td colspan="3"><?= $ticket['date_mod'] . ' ' . t('by') . ' ' .  $ticket['users_id_lastupdater'] ?></th>
+                    <td colspan="3"><?= $ticket['date_mod'] . '          ' . t('by') . ' ' .  $ticket['users_id_lastupdater'] ?></th>
                 </tr>
             </tbody>
         </table>
@@ -78,7 +78,7 @@
                         # 1 = Requester
                         foreach ( $t_actor as $actor) {
                             if ($actor[type] == 1) {
-                                echo '<i class="fa fa-user" title="Requester user"></i>', $actor['users_id'], '<br>';
+                                echo '<i class="fa fa-user" title="Requester user"></i>&nbsp', $actor['users_id'], '<br>';
                             }
                         }
                     ?>
@@ -89,7 +89,7 @@
                         # 3 = Watcher
                         foreach ( $t_actor as $actor) {
                             if ($actor[type] == 3) {
-                                echo '<i class="fa fa-user" title="Requester user"></i>', $actor['users_id'], '<br>';
+                                echo '<i class="fa fa-user" title="Watcher user"></i>&nbsp', $actor['users_id'], '<br>';
                             }
                         }
                     ?>
@@ -100,7 +100,7 @@
                         # 2 = Assigned to
                         foreach ( $t_actor as $actor) {
                             if ($actor[type] == 2) {
-                                echo '<i class="fa fa-user" title="Requester user"></i>', $actor['users_id'], '<br>';
+                                echo '<i class="fa fa-user" title="Technician user"></i>&nbsp', $actor['users_id'], '<br>';
                             }
                         }
                     ?>
