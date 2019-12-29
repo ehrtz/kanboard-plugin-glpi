@@ -136,7 +136,7 @@ class GlpiTask implements ExternalTaskInterface
             case self::PLANNED :
                 return t('Procsessing (planned)');
             case self::WAITING :
-                return t('Waiting');
+                return t('Pending');
             case self::SOLVED :
                 return t('Solved');
             case self::CLOSED :
@@ -189,29 +189,29 @@ class GlpiTask implements ExternalTaskInterface
     public function getUrgencyName($value)
     {
         switch ($value) {
-            case 5 :
+            case self::VERY_HIGH :
                 return t('Very high');
-            case 4 :
+            case self::HIGH :
                 return t('High');
-            case 3 :
+            case self::MEDIUM :
                 return t('Medium');
-            case 2 :
+            case self::LOW :
                 return t('Low');
-            case 1 :
+            case self::VERY_LOW :
                 return t('Very low');
 
             // No standard one :
-            case 0 :
+            case self::ALL :
                 return t('All');
-            case -1 :
+            case self::AT_VERY_LEAST_VERY_LOW :
                 return t('At least very low');
-            case -2 :
+            case self::AT_LEAST_LOW :
                 return t('At least low');
-            case -3 :
+            case self::AT_LEAST_MEDIUM :
                 return t('At least medium');
-            case -4 :
+            case self::AT_LEAST_HIGH :
                 return t('At least high');
-            case -5 :
+            case self::AT_VERY_LEAST_VERY_HIGH :
                 return t('At least very high');
             default :
                 // Return $value if not define
@@ -228,33 +228,33 @@ class GlpiTask implements ExternalTaskInterface
     public function getImpactName($value)
     {
         switch ($value) {
-         case 5 :
-            return t('Very high');
-         case 4 :
-            return t('High');
-         case 3 :
-            return t('Medium');
-         case 2 :
-            return t('Low');
-         case 1 :
-            return t('Very low');
+            case self::VERY_HIGH :
+                return t('Very high');
+            case self::HIGH :
+                return t('High');
+            case self::MEDIUM :
+                return t('Medium');
+            case self::LOW :
+                return t('Low');
+            case self::VERY_LOW :
+                return t('Very low');
 
-         // No standard one :
-         case 0 :
-            return t('All');
-         case -1 :
-            return t('At least very low');
-         case -2 :
-            return t('At least low');
-         case -3 :
-            return t('At least medium');
-         case -4 :
-            return t('At least high');
-         case -5 :
-            return t('At least very high');
-         default :
-            // Return $value if not define
-            return $value;
+            // No standard one :
+            case self::ALL :
+                return t('All');
+            case self::AT_VERY_LEAST_VERY_LOW :
+                return t('At least very low');
+            case self::AT_LEAST_LOW :
+                return t('At least low');
+            case self::AT_LEAST_MEDIUM :
+                return t('At least medium');
+            case self::AT_LEAST_HIGH :
+                return t('At least high');
+            case self::AT_VERY_LEAST_VERY_HIGH :
+                return t('At least very high');
+            default :
+                // Return $value if not define
+                return $value;
       }
     }
 
@@ -267,31 +267,31 @@ class GlpiTask implements ExternalTaskInterface
     public function getPriorityName($value)
     {
         switch ($value) {
-            case 6 :
+            case self::MAJOR :
                 return t('Major');
-            case 5 :
+            case self::VERY_HIGH :
                 return t('Very high');
-            case 4 :
+            case self::HIGH :
                 return t('High');
-            case 3 :
+            case self::MEDIUM :
                 return t('Medium');
-            case 2 :
+            case self::LOW :
                 return t('Low');
-            case 1 :
+            case self::VERY_LOW :
                 return t('Very low');
 
             // No standard one :
-            case 0 :
+            case self::ALL :
                 return t('All');
-            case -1 :
+            case self::AT_VERY_LEAST_VERY_LOW :
                 return t('At least very low');
-            case -2 :
+            case self::AT_LEAST_LOW :
                 return t('At least low');
-            case -3 :
+            case self::AT_LEAST_MEDIUM :
                 return t('At least medium');
-            case -4 :
+            case self::AT_LEAST_HIGH :
                 return t('At least high');
-            case -5 :
+            case self::AT_VERY_LEAST_VERY_HIGH :
                 return t('At least very high');
             default :
                 // Return $value if not define
