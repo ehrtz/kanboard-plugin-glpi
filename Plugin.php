@@ -6,6 +6,7 @@ use Kanboard\Core\Translator;
 use Kanboard\Model\TaskModel;
 use Kanboard\Plugin\Glpi\ExternalTask\GlpiTaskProvider;
 use Kanboard\Plugin\Glpi\Subscriber\GlpiSubscriber;
+use Kanboard\Plugin\Glpi\Action\CheckAction;
 
 class Plugin extends Base
 {
@@ -18,6 +19,9 @@ class Plugin extends Base
 
         $subscriber = new GlpiSubscriber($this->container);
         $this->dispatcher->addSubscriber($subscriber);
+
+        $action = new CheckAction($this->container);
+        $this->actionManager->register($action);
     }
 
     /**

@@ -8,7 +8,7 @@ use Kanboard\Core\ExternalTask\NotFoundException;
 
 class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
 {
-    private $session_token;
+    private $session_token = '';
     /**
      * Get provider name (visible in the user interface)
      *
@@ -53,9 +53,9 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
      */
     public function fetch($uri, $projectID)
     {
-        $this->$session_token = $this->getGlpiSession();
+        $this->session_token = $this->getGlpiSession();
 
-        if ($this->$session_token == ''){
+        if ($this->session_token == ''){
             throw new NotFoundException("Coudn't fetch GLPI ticket data! Authentication Error!");
         }
 
@@ -161,7 +161,7 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
     protected function killGlpiSession()
     {
         $headers = array(
-            'session-token: ' . $this->$session_token
+            'session-token: ' . $this->session_token
         );
 
         $url = $this->configModel->get('glpi_url') . '/apirest.php/killSession/';
@@ -191,7 +191,7 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
     protected function getGlpiTicket($uri)
     {
         $headers = array(
-            'session-token: ' . $this->$session_token
+            'session-token: ' . $this->session_token
         );
 
         $app_token = $this->configModel->get('glpi_app_token');
