@@ -170,13 +170,22 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
     }
 
     protected function getAuthorizationHeaders(){
+        $headers = array();
+        $app_token = $this->configModel->get('glpi_app_token');
+
+        if (!empty($app_token)) {
+            $headers[] = 'App-Token: '. $app_token;
+        }
+
+        #TODO: apply condition whether user credentials or user token is used
+        #      for API authentication
         $user_token = $this->configModel->get('glpi_user_token');
 
         if (!empty($user_token)) {
-            return array(
-                'Authorization: user_token '. $user_token
-            );
+           $headers[] = 'Authorization: user_token '. $user_token;
         }
+
+        return $headers;
     }
 
     protected function getGlpiTicket($uri)
@@ -184,6 +193,12 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
         $headers = array(
             'session-token: ' . $this->$session_token
         );
+
+        $app_token = $this->configModel->get('glpi_app_token');
+
+        if (!empty($app_token)) {
+            $headers[] = 'App-Token: '. $app_token;
+        }
 
         $matches = array();
         if (preg_match('/id=(\d+)$/', $uri, $matches)) {
@@ -201,9 +216,11 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
             $id = $matches[1];
         }
 
-        $headers = array(
-            'session-token: ' . $this->$session_token
-        );
+        $app_token = $this->configModel->get('glpi_app_token');
+
+        if (!empty($app_token)) {
+            $headers[] = 'App-Token: '. $app_token;
+        }
 
         $ticket_path = '/apirest.php/Ticket/' . $id . '/Ticket_User' . '?expand_dropdowns=true&get_hateoas=false';
         return $this->httpClient->getJson($this->getBaseUrl() . $ticket_path, $headers);
