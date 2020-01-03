@@ -211,6 +211,10 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
 
     protected function getGlpiTicketActor($uri)
     {
+        $headers = array(
+            'session-token: ' . $this->session_token
+        );
+
         $matches = array();
         if (preg_match('/id=(\d+)$/', $uri, $matches)) {
             $id = $matches[1];

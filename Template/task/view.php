@@ -77,7 +77,7 @@
                         # actor type
                         # 1 = Requester
                         foreach ( $t_actor as $actor) {
-                            if ($actor[type] == 1) {
+                            if ($actor['type'] == 1) {
                                 echo '<i class="fa fa-user" title="Requester user"></i>&nbsp', $actor['users_id'], '<br>';
                             }
                         }
@@ -88,7 +88,7 @@
                         # actor type
                         # 3 = Watcher
                         foreach ( $t_actor as $actor) {
-                            if ($actor[type] == 3) {
+                            if ($actor['type'] == 3) {
                                 echo '<i class="fa fa-user" title="Watcher user"></i>&nbsp', $actor['users_id'], '<br>';
                             }
                         }
@@ -99,7 +99,7 @@
                         # actor type
                         # 2 = Assigned to
                         foreach ( $t_actor as $actor) {
-                            if ($actor[type] == 2) {
+                            if ($actor['type'] == 2) {
                                 echo '<i class="fa fa-user" title="Technician user"></i>&nbsp', $actor['users_id'], '<br>';
                             }
                         }
