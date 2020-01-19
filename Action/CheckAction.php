@@ -4,6 +4,7 @@ namespace Kanboard\Plugin\Glpi\Action;
 
 use Kanboard\Action\Base;
 use Kanboard\Model\TaskModel;
+use Kanboard\Plugin\Glpi\ExternalTask\GlpiTask;
 
 class CheckAction extends Base
 {
@@ -46,6 +47,12 @@ class CheckAction extends Base
                     );
                 }
 
+                if ( $ticket['status'] == GlpiTask::CLOSED || $ticket['status'] == GlpiTask::SOLVED ) {
+                    $values += array(
+                        'is_active' => TaskModel::STATUS_CLOSED,
+                    );
+                }
+
                 if (isset($values) && !empty($values)) {
                     $values += array(
                         'id' => $task['id'],
@@ -54,12 +61,15 @@ class CheckAction extends Base
                     $this->taskModificationModel->update($values, true);
                     $taskEventJob = $this->taskEventJob->withParams($task['id'], array(TaskModel::EVENT_UPDATE));
                     $this->queueManager->push($taskEventJob);
-                }
 
-                $this->taskMetadataModel->save($task['id'], array(
-                    'glpi_last_sync' => date('d-m-Y H:i:s'),
-                ));
-                $this->logger->info(sprintf('Glpi ticket %d was updated (task #%d)', $task['reference'], $task['id']));
+                    # use GLPI ticket last modification data/time
+                    # Kanboard and GLPI might have different timezone setup
+                    # so using Kanboard time, synch won't work properly
+                    $this->taskMetadataModel->save($task['id'], array(
+                        'glpi_last_sync' => $last_updated,
+                    ));
+                    $this->logger->info(sprintf('Glpi ticket %d was updated (task #%d)', $task['reference'], $task['id']));
+                }
             }
         }
     }
