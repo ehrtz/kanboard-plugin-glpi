@@ -3,7 +3,6 @@
 namespace Kanboard\Plugin\Glpi\ExternalTask;
 
 use Kanboard\Core\Base;
-use Kanboard\Model\TaskModel;
 use Kanboard\Core\ExternalTask\ExternalTaskProviderInterface;
 use Kanboard\Core\ExternalTask\NotFoundException;
 
@@ -64,12 +63,6 @@ class GlpiTaskProvider extends Base implements ExternalTaskProviderInterface
 
         if (isset($ticket) && empty($ticket['id'])) {
             throw new NotFoundException($ticket[1]);
-        }
-
-        $task = $this->taskFinderModel->getByReference($projectID, $ticket['id']);
-
-        if ( $task['reference'] == $ticket['id'] ) {
-            throw new NotFoundException("Ticket Already added");
         }
 
         $ticket['actor'] = $this->getGlpiTicketActor($uri);
