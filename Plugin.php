@@ -7,6 +7,7 @@ use Kanboard\Model\TaskModel;
 use Kanboard\Plugin\Glpi\ExternalTask\GlpiTaskProvider;
 use Kanboard\Plugin\Glpi\Subscriber\GlpiSubscriber;
 use Kanboard\Plugin\Glpi\Action\CheckAction;
+use Kanboard\Core\ExternalTask\ExternalTaskException;
 
 class Plugin extends Base
 {
@@ -22,6 +23,14 @@ class Plugin extends Base
 
         $action = new CheckAction($this->container);
         $this->actionManager->register($action);
+
+        $this->hook->on('model:task:creation:prepare', function($values){
+            $tasks = $this->taskFinderModel->getByReference($values['project_id'], $values['reference']);
+
+            if (isset($tasks)) {
+                throw new ExternalTaskException('External Task already exist in current project with Task ID : ' . $tasks['id']);
+            }
+        });
     }
 
     /**
