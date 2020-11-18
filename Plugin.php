@@ -25,10 +25,13 @@ class Plugin extends Base
         $this->actionManager->register($action);
 
         $this->hook->on('model:task:creation:prepare', function($values){
-            $tasks = $this->taskFinderModel->getByReference($values['project_id'], $values['reference']);
 
-            if (isset($tasks)) {
-                throw new ExternalTaskException('External Task already exist in current project with Task ID : ' . $tasks['id']);
+            if (isset($values['reference']) && !empty($values['reference'])){
+                $tasks = $this->taskFinderModel->getByReference($values['project_id'], $values['reference']);
+
+                if (isset($tasks)) {
+                    throw new ExternalTaskException('External Task already exist in current project with Task ID : ' . $tasks['id']);
+                }
             }
         });
     }
