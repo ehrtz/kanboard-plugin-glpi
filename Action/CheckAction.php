@@ -58,7 +58,7 @@ class CheckAction extends Base
                         'id' => $task['id'],
                     );
 
-                    $this->taskModificationModel->update($values, true);
+                    $this->taskStatusModel->close($task['id']);
                     $taskEventJob = $this->taskEventJob->withParams($task['id'], array(TaskModel::EVENT_UPDATE));
                     $this->queueManager->push($taskEventJob);
 
